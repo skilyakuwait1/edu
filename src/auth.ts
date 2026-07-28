@@ -6,7 +6,6 @@ import { getTenantClients } from "@/lib/tenant/clientCache";
 import { tenantContext } from "@/lib/tenant/context";
 import { authConfig } from "@/auth.config";
 import { refillQueue } from "@/lib/services/queue.service";
-import type { Role } from "@/generated/tenant-client/client";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -70,22 +69,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    ...authConfig.callbacks,
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.role = user.role;
-        token.employeeId = user.employeeId;
-        token.tenantId = user.tenantId;
-      }
-      return token;
-    },
-    session: async ({ session, token }) => {
-      session.user.id = token.sub as string;
-      session.user.role = token.role as Role;
-      session.user.employeeId = token.employeeId as string | null;
-      session.user.tenantId = token.tenantId as string;
-      return session;
-    },
-  },
+  // jwt/session/authorized all come from authConfig (see auth.config.ts for
+  // why they live there instead of here).
 });

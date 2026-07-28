@@ -1,10 +1,21 @@
 import "dotenv/config";
+import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/tenant-client/client";
 import { refillQueue } from "../src/lib/services/queue.service";
+import { tenantContext } from "../src/lib/tenant/context";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
+const pgPool = new Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
+
+// queue.service.ts reaches the DB through the @/lib/prisma and @/lib/pgPool
+// Proxies, which resolve from AsyncLocalStorage — this script isn't running
+// inside withTenantContext (no HTTP request, no session), so it establishes
+// the same context directly, exactly as the multi-tenant docs describe.
+function runInTenantContext<T>(fn: () => Promise<T>): Promise<T> {
+  return tenantContext.run({ tenantId: "verify-queue-script", prisma, pgPool }, fn);
+}
 
 async function main() {
   const source = await prisma.source.findFirstOrThrow();
@@ -38,7 +49,9 @@ async function main() {
   );
   console.log(`Created ${leads.length} AVAILABLE leads, queueSize=5, 2 agents (demand 10 > supply 8).`);
 
-  const [resA, resB] = await Promise.all([refillQueue(agentA.id), refillQueue(agentB.id)]);
+  const [resA, resB] = await runInTenantContext(() =>
+    Promise.all([refillQueue(agentA.id), refillQueue(agentB.id)]),
+  );
   console.log("Agent A refill result:", resA);
   console.log("Agent B refill result:", resB);
 
@@ -73,4 +86,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pgPool.end();
   });
