@@ -3,8 +3,9 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { listImportLogs } from "@/lib/services/import.service";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function GET() {
+export const GET = withTenantContext(async () => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN, Role.MANAGER]);
@@ -13,4 +14,4 @@ export async function GET() {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

@@ -3,8 +3,9 @@ import { getSettings } from "@/lib/services/queue.service";
 import { Role } from "@/generated/tenant-client/client";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { QueueSettingsForm } from "@/components/settings/QueueSettingsForm";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function QueueSettingsPage() {
+export default withTenantContext(async function QueueSettingsPage() {
   const session = await getSessionOrThrow();
   requireRole(session, [Role.SUPER_ADMIN]);
   const settings = await getSettings();
@@ -21,4 +22,4 @@ export default async function QueueSettingsPage() {
       <QueueSettingsForm queueSize={settings.queueSize} inactivityTimeoutHours={settings.inactivityTimeoutHours} />
     </div>
   );
-}
+});

@@ -3,11 +3,12 @@ import { getSessionOrThrow } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { updateAppointmentStatus } from "@/lib/services/appointment.service";
 import { appointmentStatusSchema } from "@/lib/validation/appointmentSchema";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function PATCH(
+export const PATCH = withTenantContext(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     const { id } = await params;
@@ -21,4 +22,4 @@ export async function PATCH(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

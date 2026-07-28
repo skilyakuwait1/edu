@@ -1,5 +1,6 @@
 import { getSessionOrThrow } from "@/lib/auth/session";
 import { getReportSummary } from "@/lib/services/report.service";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 const STRATEGY_LABELS: Record<string, string> = {
   ADD_NEW_ONLY: "إضافة الجدد فقط",
@@ -7,7 +8,7 @@ const STRATEGY_LABELS: Record<string, string> = {
   MERGE: "دمج البيانات",
 };
 
-export default async function ReportsPage() {
+export default withTenantContext(async function ReportsPage() {
   const session = await getSessionOrThrow();
   const report = await getReportSummary(session);
 
@@ -114,7 +115,7 @@ export default async function ReportsPage() {
       </div>
     </div>
   );
-}
+});
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (

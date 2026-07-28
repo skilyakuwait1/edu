@@ -10,8 +10,9 @@ import { CallResultForm } from "@/components/calls/CallResultForm";
 import { FollowUpForm } from "@/components/followups/FollowUpForm";
 import { FollowUpTimeline } from "@/components/followups/FollowUpTimeline";
 import { AppointmentStatusSelect } from "@/components/appointments/AppointmentStatusSelect";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function LeadDetailPage({
+export default withTenantContext(async function LeadDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -116,7 +117,7 @@ export default async function LeadDetailPage({
       </div>
     </div>
   );
-}
+});
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (

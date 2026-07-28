@@ -4,8 +4,9 @@ import { Role } from "@/generated/tenant-client/client";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { SimpleEntityForm } from "@/components/settings/SimpleEntityForm";
 import { EmployeeList } from "@/components/settings/EmployeeList";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function EmployeesSettingsPage() {
+export default withTenantContext(async function EmployeesSettingsPage() {
   const session = await getSessionOrThrow();
   requireRole(session, [Role.SUPER_ADMIN]);
   const employees = await prisma.employee.findMany({ orderBy: { name: "asc" } });
@@ -19,4 +20,4 @@ export default async function EmployeesSettingsPage() {
       <EmployeeList items={employees} />
     </div>
   );
-}
+});

@@ -1,22 +1,20 @@
-import { Pool } from "pg";
-
-const globalForPg = globalThis as unknown as { pgPool?: Pool };
+import type { Pool } from "pg";
+import { getTenantContext } from "@/lib/tenant/context";
 
 /**
- * A plain node-postgres pool, used only by the queue engine (queue.service.ts)
- * for its row-locking claim transaction. `prisma.$transaction()` combined
- * with `@prisma/adapter-pg` 7.9.1 was found to corrupt the wire protocol
- * ("bind message supplies N parameters, but prepared statement \"\" requires
- * 0") when a transaction overlaps in time with other concurrent Prisma
- * calls on the same client — reproducible, not a one-off. Plain concurrent
- * Prisma calls without `$transaction` are unaffected, so the rest of the
- * app keeps using `prisma` from `@/lib/prisma` normally; only the queue
- * engine's actual multi-statement transaction goes through this pool
- * instead.
+ * Used only by the queue engine (queue.service.ts) for its row-locking claim
+ * transaction. Same Proxy pattern as @/lib/prisma — `pgPool.connect()`
+ * resolves the current tenant's pool via AsyncLocalStorage, and everything
+ * after `.connect()` (queries, BEGIN/COMMIT, `client.release()`) operates on
+ * the real `PoolClient`, so `queue.service.ts` itself needs zero changes and
+ * the existing `prisma.$transaction` + `@prisma/adapter-pg` corruption
+ * mitigation (raw `pg` instead of Prisma's transaction API) stays exactly as
+ * effective as it was single-tenant, per-tenant now.
  */
-export const pgPool =
-  globalForPg.pgPool ?? new Pool({ connectionString: process.env.DATABASE_URL, max: 3 });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPg.pgPool = pgPool;
-}
+export const pgPool = new Proxy({} as Pool, {
+  get(_target, prop) {
+    const pool = getTenantContext().pgPool;
+    const value = Reflect.get(pool as object, prop, pool);
+    return typeof value === "function" ? value.bind(pool) : value;
+  },
+}) as Pool;

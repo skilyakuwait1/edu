@@ -1,8 +1,9 @@
 import { getSessionOrThrow } from "@/lib/auth/session";
 import { listAppointmentsForUser } from "@/lib/services/appointment.service";
 import { AppointmentStatusSelect } from "@/components/appointments/AppointmentStatusSelect";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function AppointmentsPage() {
+export default withTenantContext(async function AppointmentsPage() {
   const session = await getSessionOrThrow();
   const appointments = await listAppointmentsForUser(session);
 
@@ -49,4 +50,4 @@ export default async function AppointmentsPage() {
       </div>
     </div>
   );
-}
+});

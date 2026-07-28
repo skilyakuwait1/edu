@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import { getSessionOrThrow } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { getLeadForUser } from "@/lib/services/lead.service";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function GET(
+export const GET = withTenantContext(async (
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     const { id } = await params;
@@ -18,4 +19,4 @@ export async function GET(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

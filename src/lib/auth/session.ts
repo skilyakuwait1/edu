@@ -6,6 +6,7 @@ export type Session = {
   email: string;
   role: Role;
   employeeId: string | null;
+  tenantId: string;
 };
 
 export class UnauthorizedError extends Error {
@@ -28,6 +29,7 @@ export async function getSession(): Promise<Session | null> {
     email: session.user.email ?? "",
     role: session.user.role,
     employeeId: session.user.employeeId,
+    tenantId: session.user.tenantId,
   };
 }
 

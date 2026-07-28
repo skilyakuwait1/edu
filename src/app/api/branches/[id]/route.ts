@@ -3,11 +3,12 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function PATCH(
+export const PATCH = withTenantContext(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -23,7 +24,7 @@ export async function PATCH(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
 
 /**
  * Deactivates rather than hard-deletes: Branch is an optional FK on Appointment,
@@ -31,10 +32,10 @@ export async function PATCH(
  * silently and orphan historical appointments' branch attribution. Deactivating keeps
  * the row (and existing references) intact while hiding it from active-branch pickers.
  */
-export async function DELETE(
+export const DELETE = withTenantContext(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -44,4 +45,4 @@ export async function DELETE(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

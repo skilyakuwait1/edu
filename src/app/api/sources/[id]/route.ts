@@ -3,11 +3,12 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function PATCH(
+export const PATCH = withTenantContext(async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -23,15 +24,15 @@ export async function PATCH(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
 
 /** Deactivates rather than hard-deletes — Source is a required FK on Lead, so a real
  * delete would be blocked by any existing lead anyway; deactivating just hides it
  * from new-lead pickers while keeping historical leads' source attribution intact. */
-export async function DELETE(
+export const DELETE = withTenantContext(async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -41,4 +42,4 @@ export async function DELETE(
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

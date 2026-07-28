@@ -3,8 +3,9 @@ import { getSessionOrThrow } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { logCall } from "@/lib/services/call-log.service";
 import { callLogCreateSchema } from "@/lib/validation/callLogSchema";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function POST(request: NextRequest) {
+export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     const session = await getSessionOrThrow();
     const body = await request.json();
@@ -17,4 +18,4 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

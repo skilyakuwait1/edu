@@ -1,7 +1,8 @@
 import { getSessionOrThrow } from "@/lib/auth/session";
 import { getManagerDashboard } from "@/lib/services/report.service";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function ManagerDashboardPage() {
+export default withTenantContext(async function ManagerDashboardPage() {
   const session = await getSessionOrThrow();
   const data = await getManagerDashboard(session);
 
@@ -69,7 +70,7 @@ export default async function ManagerDashboardPage() {
       </div>
     </div>
   );
-}
+});
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (

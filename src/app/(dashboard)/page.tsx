@@ -5,8 +5,9 @@ import { getDailyWorkScreenData } from "@/lib/services/report.service";
 import { formatPhoneDisplay } from "@/lib/validation/phone";
 import { NextCustomerButton } from "@/components/dailywork/NextCustomerButton";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function DailyWorkScreenPage() {
+export default withTenantContext(async function DailyWorkScreenPage() {
   const session = await getSessionOrThrow();
 
   if (session.role === Role.SUPER_ADMIN || session.role === Role.MANAGER) {
@@ -60,7 +61,7 @@ export default async function DailyWorkScreenPage() {
       </div>
     </div>
   );
-}
+});
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (

@@ -3,8 +3,9 @@ import { getSessionOrThrow } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { createLead, listLeadsForUser } from "@/lib/services/lead.service";
 import { leadCreateSchema } from "@/lib/validation/leadSchema";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function GET(request: NextRequest) {
+export const GET = withTenantContext(async (request: NextRequest) => {
   try {
     const session = await getSessionOrThrow();
     const { searchParams } = new URL(request.url);
@@ -18,9 +19,9 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     await getSessionOrThrow();
     const body = await request.json();
@@ -30,4 +31,4 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

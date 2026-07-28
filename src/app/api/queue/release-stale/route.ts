@@ -3,6 +3,7 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { releaseStaleAssignments } from "@/lib/services/queue.service";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 /**
  * Manual/cron-callable trigger for the queue's auto-release check. The MVP
@@ -10,7 +11,7 @@ import { Role } from "@/generated/tenant-client/client";
  * endpoint exists so a real scheduler (Vercel Cron, etc.) can call it
  * directly in production later without further wiring.
  */
-export async function POST() {
+export const POST = withTenantContext(async () => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN, Role.MANAGER]);
@@ -19,4 +20,4 @@ export async function POST() {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

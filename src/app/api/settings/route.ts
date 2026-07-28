@@ -5,13 +5,14 @@ import { apiErrorResponse } from "@/lib/api/errors";
 import { getSettings } from "@/lib/services/queue.service";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 const settingsUpdateSchema = z.object({
   queueSize: z.number().int().min(1).max(200),
   inactivityTimeoutHours: z.number().int().min(1).max(720),
 });
 
-export async function GET() {
+export const GET = withTenantContext(async () => {
   try {
     await getSessionOrThrow();
     const settings = await getSettings();
@@ -19,9 +20,9 @@ export async function GET() {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
 
-export async function PATCH(request: NextRequest) {
+export const PATCH = withTenantContext(async (request: NextRequest) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -38,4 +39,4 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

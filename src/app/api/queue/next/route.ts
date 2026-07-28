@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { getSessionOrThrow, ForbiddenError } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { getNextCustomer } from "@/lib/services/queue.service";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function POST() {
+export const POST = withTenantContext(async () => {
   try {
     const session = await getSessionOrThrow();
     if (!session.employeeId) {
@@ -14,4 +15,4 @@ export async function POST() {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

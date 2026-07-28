@@ -4,6 +4,7 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { commitImport } from "@/lib/services/import.service";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 const commitSchema = z.object({
   fileName: z.string().min(1),
@@ -21,7 +22,7 @@ const commitSchema = z.object({
   ),
 });
 
-export async function POST(request: NextRequest) {
+export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN, Role.MANAGER]);
@@ -33,4 +34,4 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});

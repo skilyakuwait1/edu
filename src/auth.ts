@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import { platformPrisma } from "@/lib/platformPrisma";
+import { getTenantClients } from "@/lib/tenant/clientCache";
+import { tenantContext } from "@/lib/tenant/context";
 import { authConfig } from "@/auth.config";
 import { refillQueue } from "@/lib/services/queue.service";
 import type { Role } from "@/generated/tenant-client/client";
@@ -20,21 +22,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = credentials?.password;
         if (typeof email !== "string" || typeof password !== "string") return null;
 
-        const user = await prisma.user.findUnique({ where: { email } });
+        // No subdomains — every tenant's users share one login page, so the
+        // tenant is resolved from the email itself via a global routing
+        // index in the platform DB, kept in sync whenever a tenant admin
+        // creates/edits/deletes a User (see src/app/api/users/**).
+        const index = await platformPrisma.tenantUserIndex.findUnique({ where: { email } });
+        if (!index) return null;
+
+        const { prisma: tenantPrisma, pgPool: tenantPgPool } = await getTenantClients(index.tenantId);
+
+        const user = await tenantPrisma.user.findUnique({ where: { email } });
         if (!user || !user.isActive) return null;
 
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
         if (user.employeeId) {
+          const employeeId = user.employeeId;
           // Heartbeat for the queue engine's auto-release check: logging in
           // marks this agent active again immediately, then tops their
-          // active set back up to a full queueSize right away.
-          await prisma.employee.update({
-            where: { id: user.employeeId },
-            data: { lastActiveAt: new Date() },
-          });
-          await refillQueue(user.employeeId);
+          // active set back up to a full queueSize right away. refillQueue()
+          // (queue.service.ts) reaches the DB through the @/lib/prisma and
+          // @/lib/pgPool Proxies, which read from AsyncLocalStorage — no
+          // request-scoped context exists yet this early in the login flow
+          // (that's what this call is establishing), so it needs its own
+          // explicit tenantContext.run(...) rather than relying on
+          // withTenantContext (which wraps *already-authenticated* requests).
+          await tenantContext.run(
+            { tenantId: index.tenantId, prisma: tenantPrisma, pgPool: tenantPgPool },
+            async () => {
+              await tenantPrisma.employee.update({
+                where: { id: employeeId },
+                data: { lastActiveAt: new Date() },
+              });
+              await refillQueue(employeeId);
+            },
+          );
         }
 
         return {
@@ -42,6 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           role: user.role,
           employeeId: user.employeeId,
+          tenantId: index.tenantId,
         };
       },
     }),
@@ -52,6 +76,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.role = user.role;
         token.employeeId = user.employeeId;
+        token.tenantId = user.tenantId;
       }
       return token;
     },
@@ -59,6 +84,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = token.sub as string;
       session.user.role = token.role as Role;
       session.user.employeeId = token.employeeId as string | null;
+      session.user.tenantId = token.tenantId as string;
       return session;
     },
   },

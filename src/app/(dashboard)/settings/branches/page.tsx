@@ -4,8 +4,9 @@ import { Role } from "@/generated/tenant-client/client";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { SimpleEntityForm } from "@/components/settings/SimpleEntityForm";
 import { EditableEntityList } from "@/components/settings/EditableEntityList";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function BranchesSettingsPage() {
+export default withTenantContext(async function BranchesSettingsPage() {
   const session = await getSessionOrThrow();
   requireRole(session, [Role.SUPER_ADMIN]);
   const branches = await prisma.branch.findMany({ orderBy: { name: "asc" } });
@@ -19,4 +20,4 @@ export default async function BranchesSettingsPage() {
       <EditableEntityList items={branches} endpoint="/api/branches" />
     </div>
   );
-}
+});

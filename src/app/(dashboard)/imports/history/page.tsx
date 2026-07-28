@@ -1,6 +1,7 @@
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { listImportLogs } from "@/lib/services/import.service";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 const STRATEGY_LABELS: Record<string, string> = {
   ADD_NEW_ONLY: "إضافة الجدد فقط",
@@ -8,7 +9,7 @@ const STRATEGY_LABELS: Record<string, string> = {
   MERGE: "دمج البيانات",
 };
 
-export default async function ImportHistoryPage() {
+export default withTenantContext(async function ImportHistoryPage() {
   const session = await getSessionOrThrow();
   requireRole(session, [Role.SUPER_ADMIN, Role.MANAGER]);
   const logs = await listImportLogs();
@@ -55,4 +56,4 @@ export default async function ImportHistoryPage() {
       </div>
     </div>
   );
-}
+});

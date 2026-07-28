@@ -4,8 +4,9 @@ import { Role } from "@/generated/tenant-client/client";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { UserForm } from "@/components/settings/UserForm";
 import { UserList } from "@/components/settings/UserList";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function UsersSettingsPage() {
+export default withTenantContext(async function UsersSettingsPage() {
   const session = await getSessionOrThrow();
   requireRole(session, [Role.SUPER_ADMIN]);
 
@@ -35,4 +36,4 @@ export default async function UsersSettingsPage() {
       />
     </div>
   );
-}
+});

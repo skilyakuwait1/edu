@@ -3,8 +3,9 @@ import { getSessionOrThrow } from "@/lib/auth/session";
 import { listLeadsForUser } from "@/lib/services/lead.service";
 import { LEAD_STATUS_LABELS } from "@/lib/constants/leadStatus";
 import { formatPhoneDisplay } from "@/lib/validation/phone";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export default async function LeadsPage({
+export default withTenantContext(async function LeadsPage({
   searchParams,
 }: {
   searchParams: Promise<{ search?: string; status?: string; page?: string }>;
@@ -132,4 +133,4 @@ export default async function LeadsPage({
       )}
     </div>
   );
-}
+});

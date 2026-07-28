@@ -3,8 +3,9 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/generated/tenant-client/client";
+import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
-export async function GET() {
+export const GET = withTenantContext(async () => {
   try {
     await getSessionOrThrow();
     const sources = await prisma.source.findMany({
@@ -15,9 +16,9 @@ export async function GET() {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = withTenantContext(async (request: NextRequest) => {
   try {
     const session = await getSessionOrThrow();
     requireRole(session, [Role.SUPER_ADMIN]);
@@ -30,4 +31,4 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return apiErrorResponse(error);
   }
-}
+});
