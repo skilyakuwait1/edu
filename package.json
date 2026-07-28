@@ -9,6 +9,7 @@
     "lint": "eslint",
     "postinstall": "prisma generate --config prisma.tenant.config.ts && prisma generate --config prisma.platform.config.ts",
     "db:platform:push": "prisma db push --config prisma.platform.config.ts",
+    "db:platform:seed": "tsx prisma/platform/seed.ts",
     "db:tenant:push": "prisma db push --config prisma.tenant.config.ts",
     "db:tenant:seed": "tsx prisma/tenant/seed.ts",
     "db:tenant:provision": "tsx scripts/provision-tenant.ts",
