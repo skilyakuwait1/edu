@@ -1,6 +1,6 @@
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { listImportLogs } from "@/lib/services/import.service";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 const STRATEGY_LABELS: Record<string, string> = {
   ADD_NEW_ONLY: "إضافة الجدد فقط",

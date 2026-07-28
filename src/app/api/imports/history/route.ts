@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { listImportLogs } from "@/lib/services/import.service";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 export async function GET() {
   try {

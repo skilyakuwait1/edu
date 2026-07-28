@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 import { ImportWizard } from "@/components/imports/ImportWizard";
 
 export default async function ImportsPage() {

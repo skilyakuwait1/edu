@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import { ForbiddenError, type Session } from "@/lib/auth/session";
-import { AppointmentStatus, Role } from "@/generated/prisma/client";
+import { AppointmentStatus, Role } from "@/generated/tenant-client/client";
 
 /** SUPER_ADMIN/MANAGER see every appointment; AGENT only sees their own. */
 export async function listAppointmentsForUser(session: Session) {

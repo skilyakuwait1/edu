@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { LEAD_STATUS_LABELS } from "@/lib/constants/leadStatus";
-import type { LeadStatus } from "@/generated/prisma/client";
+import type { LeadStatus } from "@/generated/tenant-client/client";
 
 export type ExistingLeadInfo = {
   id: string;

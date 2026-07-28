@@ -1,0 +1,50 @@
+// Education CRM SaaS — platform (control-plane) data model.
+// Physically separate from every tenant's own database (prisma/tenant/schema.prisma).
+// See /Users/bstar/.claude/plans/magical-cooking-oasis.md, Phase 2, for the
+// multi-tenant architecture this supports.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../../src/generated/platform-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+model Tenant {
+  id          String       @id @default(cuid())
+  name        String
+  databaseUrl String       @db.Text // tenant's own Postgres connection string — plaintext for v1, encrypt before real paying customers
+  status      TenantStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  userIndex TenantUserIndex[]
+}
+
+// Global email -> tenant routing index, kept in sync whenever a tenant's
+// Super Admin creates/edits/deletes a User in their own database. Login
+// resolves the tenant from this table (by email) since there are no
+// per-tenant subdomains — everyone logs in through the same shared page.
+model TenantUserIndex {
+  email    String @id
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+// The SaaS owner's own login — fully separate from any tenant's Users, used
+// only by the platform-admin section (create/suspend tenants).
+model PlatformAdmin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

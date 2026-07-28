@@ -4,7 +4,7 @@ import type { LeadCreateInput } from "@/lib/validation/leadSchema";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import { refillQueue } from "@/lib/services/queue.service";
 import { buildLeadVisibilityFilter, ForbiddenError, type Session } from "@/lib/auth/session";
-import { Prisma, Role, LeadStatus } from "@/generated/prisma/client";
+import { Prisma, Role, LeadStatus } from "@/generated/tenant-client/client";
 
 export type ExistingLeadSummary = {
   id: string;

@@ -1,4 +1,4 @@
-import type { AppointmentStatus } from "@/generated/prisma/client";
+import type { AppointmentStatus } from "@/generated/tenant-client/client";
 
 export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
   BOOKED: "محجوز",

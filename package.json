@@ -4,10 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma db push && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate --config prisma.tenant.config.ts && prisma generate --config prisma.platform.config.ts",
+    "db:platform:push": "prisma db push --config prisma.platform.config.ts",
+    "db:tenant:push": "prisma db push --config prisma.tenant.config.ts",
+    "db:tenant:seed": "tsx prisma/tenant/seed.ts",
+    "db:tenant:provision": "tsx scripts/provision-tenant.ts",
+    "db:tenant:migrate-all": "tsx scripts/migrate-all-tenants.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

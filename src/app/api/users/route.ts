@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 const userCreateSchema = z.object({
   email: z.string().email("بريد إلكتروني غير صالح"),

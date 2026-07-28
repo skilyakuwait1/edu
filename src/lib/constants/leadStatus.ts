@@ -1,4 +1,4 @@
-import { LeadStatus } from "@/generated/prisma/client";
+import { LeadStatus } from "@/generated/tenant-client/client";
 
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   AVAILABLE: "متاح بالطابور",

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { normalizePhone } from "@/lib/validation/phone";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import type { Session } from "@/lib/auth/session";
-import { LeadStatus, type ImportStrategy } from "@/generated/prisma/client";
+import { LeadStatus, type ImportStrategy } from "@/generated/tenant-client/client";
 
 export type RawImportRow = {
   rowNumber: number;

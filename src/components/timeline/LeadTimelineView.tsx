@@ -1,4 +1,4 @@
-import type { TimelineEventType } from "@/generated/prisma/client";
+import type { TimelineEventType } from "@/generated/tenant-client/client";
 
 export type TimelineEntry = {
   id: string;

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { commitImport } from "@/lib/services/import.service";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 const commitSchema = z.object({
   fileName: z.string().min(1),

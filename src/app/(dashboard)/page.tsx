@@ -4,7 +4,7 @@ import { getSessionOrThrow } from "@/lib/auth/session";
 import { getDailyWorkScreenData } from "@/lib/services/report.service";
 import { formatPhoneDisplay } from "@/lib/validation/phone";
 import { NextCustomerButton } from "@/components/dailywork/NextCustomerButton";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 export default async function DailyWorkScreenPage() {
   const session = await getSessionOrThrow();

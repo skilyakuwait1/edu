@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/auth.config";
 import { refillQueue } from "@/lib/services/queue.service";
-import type { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/tenant-client/client";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,

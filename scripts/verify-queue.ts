@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaClient } from "../src/generated/tenant-client/client";
 import { refillQueue } from "../src/lib/services/queue.service";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
@@ -59,8 +59,9 @@ async function main() {
     console.log("PASS: no lead double-assigned, all 8 leads claimed exactly once across the two agents.");
   }
 
-  await prisma.leadTimeline.deleteMany({ where: { leadId: { in: leads.map((l) => l.id) } } });
-  await prisma.lead.deleteMany({ where: { id: { in: leads.map((l) => l.id) } } });
+  const leadIds = leads.map((l) => l.id);
+  await prisma.leadTimeline.deleteMany({ where: { leadId: { in: leadIds } } });
+  await prisma.lead.deleteMany({ where: { id: { in: leadIds } } });
   await prisma.employee.deleteMany({ where: { id: { in: [agentA.id, agentB.id] } } });
   await prisma.settings.update({ where: { id: "singleton" }, data: { queueSize: 20 } });
 }

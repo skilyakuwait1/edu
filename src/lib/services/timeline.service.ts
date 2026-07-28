@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Prisma, TimelineEventType } from "@/generated/prisma/client";
+import type { Prisma, TimelineEventType } from "@/generated/tenant-client/client";
 
 // Prisma.TransactionClient covers both a plain `prisma` call and a call made
 // inside `prisma.$transaction(async (tx) => ...)` — callers that need the

@@ -1,4 +1,4 @@
-import type { Role } from "@/generated/prisma/client";
+import type { Role } from "@/generated/tenant-client/client";
 
 export type NavItem = {
   href: string;

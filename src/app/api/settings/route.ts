@@ -4,7 +4,7 @@ import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { getSettings } from "@/lib/services/queue.service";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 const settingsUpdateSchema = z.object({
   queueSize: z.number().int().min(1).max(200),

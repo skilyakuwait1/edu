@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 const TEMPLATE_ROWS = [
   {

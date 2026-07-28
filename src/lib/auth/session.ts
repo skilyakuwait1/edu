@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { Prisma, Role } from "@/generated/prisma/client";
+import { Prisma, Role } from "@/generated/tenant-client/client";
 
 export type Session = {
   userId: string;

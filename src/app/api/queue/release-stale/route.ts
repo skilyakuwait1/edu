@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { apiErrorResponse } from "@/lib/api/errors";
 import { releaseStaleAssignments } from "@/lib/services/queue.service";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 
 /**
  * Manual/cron-callable trigger for the queue's auto-release check. The MVP

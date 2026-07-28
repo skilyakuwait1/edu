@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { LeadStatus, Role } from "@/generated/prisma/client";
+import { LeadStatus, Role } from "@/generated/tenant-client/client";
 import { requireRole, type Session } from "@/lib/auth/session";
 import { listActiveLeadsForEmployee, releaseStaleAssignments } from "@/lib/services/queue.service";
 import { listTodaysFollowUps } from "@/lib/services/followUp.service";

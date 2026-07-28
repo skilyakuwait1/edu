@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { UnauthorizedError, ForbiddenError } from "@/lib/auth/session";
 import { DuplicateLeadError, InvalidPhoneError } from "@/lib/services/lead.service";
 import { MissingFollowUpDateError, MissingAppointmentDetailsError } from "@/lib/services/call-log.service";
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/tenant-client/client";
 
 export function apiErrorResponse(error: unknown): NextResponse {
   if (error instanceof UnauthorizedError) {

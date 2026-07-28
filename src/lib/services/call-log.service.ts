@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import { refillQueue } from "@/lib/services/queue.service";
 import { ForbiddenError, type Session } from "@/lib/auth/session";
-import { CallResult, LeadStatus, Role } from "@/generated/prisma/client";
+import { CallResult, LeadStatus, Role } from "@/generated/tenant-client/client";
 import type { CallLogCreateInput } from "@/lib/validation/callLogSchema";
 
 export class MissingFollowUpDateError extends Error {

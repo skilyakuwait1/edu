@@ -1,6 +1,6 @@
 import { getSessionOrThrow, requireRole } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "@/generated/tenant-client/client";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { SimpleEntityForm } from "@/components/settings/SimpleEntityForm";
 import { EditableEntityList } from "@/components/settings/EditableEntityList";

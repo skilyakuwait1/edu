@@ -4,7 +4,7 @@ import { pgPool } from "@/lib/pgPool";
 import { prisma } from "@/lib/prisma";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import { requireRole, type Session } from "@/lib/auth/session";
-import { LeadStatus, Role } from "@/generated/prisma/client";
+import { LeadStatus, Role } from "@/generated/tenant-client/client";
 
 /** Prisma-based read for UI use (e.g. a settings page) — safe, not on the
  * concurrent claim path. See readSettingsRaw for the path that is. */

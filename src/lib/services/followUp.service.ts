@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { appendTimelineEvent } from "@/lib/services/timeline.service";
 import { refillQueue } from "@/lib/services/queue.service";
 import { buildLeadVisibilityFilter, ForbiddenError, type Session } from "@/lib/auth/session";
-import { LeadStatus, Role } from "@/generated/prisma/client";
+import { LeadStatus, Role } from "@/generated/tenant-client/client";
 import type { FollowUpCreateInput } from "@/lib/validation/followUpSchema";
 
 /**
