@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getSessionOrThrow } from "@/lib/auth/session";
 import { getLeadForUser } from "@/lib/services/lead.service";
 import { prisma } from "@/lib/prisma";
-import { formatPhoneDisplay } from "@/lib/validation/phone";
+import { formatPhoneDisplay, phoneLocalDigits } from "@/lib/validation/phone";
 import { INTEREST_LEVEL_LABELS } from "@/lib/constants/leadStatus";
 import { StatusSelect } from "@/components/leads/StatusSelect";
 import { LeadTimelineView } from "@/components/timeline/LeadTimelineView";
@@ -26,7 +26,7 @@ export default withTenantContext(async function LeadDetailPage({
 
   const canOverrideStatus = session.role === "SUPER_ADMIN" || session.role === "MANAGER";
   const waLink = `https://wa.me/${lead.phone}`;
-  const telLink = `tel:+${lead.phone}`;
+  const telLink = `tel:${phoneLocalDigits(lead.phone)}`;
 
   return (
     <div className="grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">

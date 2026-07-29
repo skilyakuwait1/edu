@@ -64,7 +64,7 @@ export function LeadForm({ sources }: { sources: Option[] }) {
         )}
 
         <Field label="الاسم الكامل" name="fullName" required />
-        <Field label="رقم الهاتف" name="phone" required dir="ltr" placeholder="+965 5000 0000" />
+        <Field label="رقم الهاتف" name="phone" required dir="ltr" placeholder="5000 0000" />
         <Field label="البريد الإلكتروني" name="email" type="email" dir="ltr" />
         <Field label="الصف الدراسي" name="studyGrade" placeholder="مثال: Grade 8, IGCSE, A Level" />
         <Field label="المنطقة" name="area" />

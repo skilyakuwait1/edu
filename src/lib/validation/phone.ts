@@ -49,10 +49,18 @@ export function normalizePhone(
   return { valid: false, reason: "طول رقم الهاتف غير صحيح" };
 }
 
-export function formatPhoneDisplay(normalized: string): string {
+/** Strips the country code so agents can dial straight from the Grandstream extension. */
+export function phoneLocalDigits(normalized: string): string {
   if (normalized.startsWith(KUWAIT_CODE) && normalized.length === 11) {
-    const local = normalized.slice(3);
-    return `+965 ${local.slice(0, 4)} ${local.slice(4)}`;
+    return normalized.slice(3);
   }
-  return `+${normalized}`;
+  return normalized;
+}
+
+export function formatPhoneDisplay(normalized: string): string {
+  const local = phoneLocalDigits(normalized);
+  if (normalized.startsWith(KUWAIT_CODE) && normalized.length === 11) {
+    return `${local.slice(0, 4)} ${local.slice(4)}`;
+  }
+  return local;
 }
