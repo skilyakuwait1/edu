@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { APPOINTMENT_STATUS_LABELS, APPOINTMENT_STATUS_ORDER } from "@/lib/constants/appointmentStatus";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export function AppointmentStatusSelect({
   appointmentId,
@@ -12,16 +13,25 @@ export function AppointmentStatusSelect({
   status: string;
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [saving, setSaving] = useState(false);
 
   async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setSaving(true);
-    await fetch(`/api/appointments/${appointmentId}`, {
+    const res = await fetch(`/api/appointments/${appointmentId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: e.target.value }),
     });
     setSaving(false);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showToast("error", data.error ?? "تعذر تحديث حالة الموعد");
+      return;
+    }
+
+    showToast("success", "تم تحديث حالة الموعد");
     router.refresh();
   }
 

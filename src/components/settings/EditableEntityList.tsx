@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 type Item = { id: string; name: string; isActive: boolean };
 
 export function EditableEntityList({ items, endpoint }: { items: Item[]; endpoint: string }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -30,35 +32,45 @@ export function EditableEntityList({ items, endpoint }: { items: Item[]; endpoin
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر الحفظ");
+      showToast("error", data.error ?? "تعذر الحفظ");
       return;
     }
     setEditingId(null);
+    showToast("success", "تم الحفظ");
     router.refresh();
   }
 
   async function reactivate(item: Item) {
     setBusyId(item.id);
     setError(null);
-    await fetch(`${endpoint}/${item.id}`, {
+    const res = await fetch(`${endpoint}/${item.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isActive: true }),
     });
     setBusyId(null);
+    if (!res.ok) {
+      showToast("error", "تعذر التفعيل");
+      return;
+    }
+    showToast("success", "تم التفعيل");
     router.refresh();
   }
 
   // DELETE deactivates rather than removing the row — see the API route for why.
-  async function handleDelete(id: string) {
-    setBusyId(id);
+  async function handleDelete(item: Item) {
+    if (!window.confirm(`متأكد إنك عايز تحذف "${item.name}"؟`)) return;
+    setBusyId(item.id);
     setError(null);
-    const res = await fetch(`${endpoint}/${id}`, { method: "DELETE" });
+    const res = await fetch(`${endpoint}/${item.id}`, { method: "DELETE" });
     setBusyId(null);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر الحذف");
+      showToast("error", data.error ?? "تعذر الحذف");
       return;
     }
+    showToast("success", "تم الحذف");
     router.refresh();
   }
 
@@ -99,7 +111,7 @@ export function EditableEntityList({ items, endpoint }: { items: Item[]; endpoin
                   </button>
                   {item.isActive ? (
                     <button
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDelete(item)}
                       disabled={busyId === item.id}
                       className="text-red-600 hover:underline dark:text-red-400"
                     >

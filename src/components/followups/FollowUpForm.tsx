@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export function FollowUpForm({ leadId }: { leadId: string }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,10 +34,12 @@ export function FollowUpForm({ leadId }: { leadId: string }) {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر حفظ المتابعة");
+      showToast("error", data.error ?? "تعذر حفظ المتابعة");
       return;
     }
 
     (e.target as HTMLFormElement).reset();
+    showToast("success", "تم جدولة المتابعة");
     router.refresh();
   }
 

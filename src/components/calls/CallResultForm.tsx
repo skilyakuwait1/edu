@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 type Option = { id: string; name: string };
 
@@ -34,6 +35,7 @@ const RESULTS_REQUIRING_FOLLOW_UP_DATE = new Set(["NEED_FOLLOW_UP", "CALL_BACK_L
 
 export function CallResultForm({ leadId, branches }: { leadId: string; branches: Option[] }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [result, setResult] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,11 +83,13 @@ export function CallResultForm({ leadId, branches }: { leadId: string; branches:
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر حفظ نتيجة المكالمة");
+      showToast("error", data.error ?? "تعذر حفظ نتيجة المكالمة");
       return;
     }
 
     setResult("");
     (document.getElementById("call-result-form") as HTMLFormElement | null)?.reset();
+    showToast("success", "تم حفظ نتيجة المكالمة");
     router.refresh();
   }
 

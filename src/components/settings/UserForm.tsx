@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 type Option = { id: string; name: string };
 
 export function UserForm({ employees }: { employees: Option[] }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,10 +36,12 @@ export function UserForm({ employees }: { employees: Option[] }) {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر إنشاء المستخدم");
+      showToast("error", data.error ?? "تعذر إنشاء المستخدم");
       return;
     }
 
     (e.target as HTMLFormElement).reset();
+    showToast("success", "تم إنشاء المستخدم");
     router.refresh();
   }
 

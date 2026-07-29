@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 type Option = { id: string; name: string };
 type UserRow = {
@@ -23,6 +24,7 @@ export function UserList({
   currentUserId: string;
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editEmail, setEditEmail] = useState("");
   const [editRole, setEditRole] = useState<UserRow["role"]>("AGENT");
@@ -57,9 +59,11 @@ export function UserList({
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر الحفظ");
+      showToast("error", data.error ?? "تعذر الحفظ");
       return;
     }
     setEditingId(null);
+    showToast("success", "تم الحفظ");
     router.refresh();
   }
 
@@ -75,22 +79,27 @@ export function UserList({
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر التنفيذ");
+      showToast("error", data.error ?? "تعذر التنفيذ");
       return;
     }
+    showToast("success", "تم تفعيل المستخدم");
     router.refresh();
   }
 
   // DELETE deactivates rather than removing the row — see the API route for why.
-  async function handleDelete(id: string) {
-    setBusyId(id);
+  async function handleDelete(item: UserRow) {
+    if (!window.confirm(`متأكد إنك عايز تعطّل حساب "${item.email}"؟`)) return;
+    setBusyId(item.id);
     setError(null);
-    const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/users/${item.id}`, { method: "DELETE" });
     setBusyId(null);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر الحذف");
+      showToast("error", data.error ?? "تعذر الحذف");
       return;
     }
+    showToast("success", "تم تعطيل الحساب");
     router.refresh();
   }
 
@@ -183,7 +192,7 @@ export function UserList({
                     {item.id !== currentUserId &&
                       (item.isActive ? (
                         <button
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => handleDelete(item)}
                           disabled={busyId === item.id}
                           className="text-red-600 hover:underline dark:text-red-400"
                         >

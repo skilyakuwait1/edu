@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export function SimpleEntityForm({
   endpoint,
@@ -11,6 +12,7 @@ export function SimpleEntityForm({
   placeholder: string;
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,10 +33,12 @@ export function SimpleEntityForm({
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? "تعذر الحفظ");
+      showToast("error", data.error ?? "تعذر الحفظ");
       return;
     }
 
     setName("");
+    showToast("success", "تمت الإضافة");
     router.refresh();
   }
 

@@ -2,20 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export function TenantStatusToggle({ tenantId, status }: { tenantId: string; status: string }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [saving, setSaving] = useState(false);
   const isActive = status === "ACTIVE";
 
   async function toggle() {
     setSaving(true);
-    await fetch(`/api/platform-admin/tenants/${tenantId}`, {
+    const res = await fetch(`/api/platform-admin/tenants/${tenantId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: isActive ? "SUSPENDED" : "ACTIVE" }),
     });
     setSaving(false);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showToast("error", data.error ?? "تعذر تنفيذ العملية");
+      return;
+    }
+
+    showToast("success", isActive ? "تم إيقاف العميل" : "تم تفعيل العميل");
     router.refresh();
   }
 
