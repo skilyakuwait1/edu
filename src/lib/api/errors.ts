@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import { UnauthorizedError, ForbiddenError } from "@/lib/auth/session";
 import { DuplicateLeadError, InvalidPhoneError } from "@/lib/services/lead.service";
 import { MissingFollowUpDateError, MissingAppointmentDetailsError } from "@/lib/services/call-log.service";
+import { WatiNotConfiguredError, WatiRequestError } from "@/lib/services/wati.service";
 import { Prisma } from "@/generated/tenant-client/client";
 
 export function apiErrorResponse(error: unknown): NextResponse {
@@ -23,6 +24,12 @@ export function apiErrorResponse(error: unknown): NextResponse {
   }
   if (error instanceof MissingFollowUpDateError || error instanceof MissingAppointmentDetailsError) {
     return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+  if (error instanceof WatiNotConfiguredError) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+  if (error instanceof WatiRequestError) {
+    return NextResponse.json({ error: error.message }, { status: 502 });
   }
   if (error instanceof ZodError) {
     return NextResponse.json({ error: "بيانات غير صالحة", issues: error.issues }, { status: 400 });

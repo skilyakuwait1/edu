@@ -10,6 +10,7 @@ import { CallResultForm } from "@/components/calls/CallResultForm";
 import { FollowUpForm } from "@/components/followups/FollowUpForm";
 import { FollowUpTimeline } from "@/components/followups/FollowUpTimeline";
 import { AppointmentStatusSelect } from "@/components/appointments/AppointmentStatusSelect";
+import { WatiReminderButton } from "@/components/leads/WatiReminderButton";
 import { withTenantContext } from "@/lib/tenant/withTenantContext";
 
 export default withTenantContext(async function LeadDetailPage({
@@ -36,10 +37,10 @@ export default withTenantContext(async function LeadDetailPage({
           {canOverrideStatus && <StatusSelect leadId={lead.id} status={lead.status} />}
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           <a
             href={telLink}
-            className="flex-1 rounded-md bg-brand px-4 py-3 text-center text-sm font-medium text-white hover:bg-brand-hover"
+            className="min-w-28 flex-1 rounded-md bg-brand px-4 py-3 text-center text-sm font-medium text-white hover:bg-brand-hover"
           >
             📞 اتصال
           </a>
@@ -47,10 +48,11 @@ export default withTenantContext(async function LeadDetailPage({
             href={waLink}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 rounded-md bg-green-600 px-4 py-3 text-center text-sm font-medium text-white"
+            className="min-w-28 flex-1 rounded-md bg-green-600 px-4 py-3 text-center text-sm font-medium text-white"
           >
             💬 واتساب
           </a>
+          <WatiReminderButton leadId={lead.id} />
         </div>
 
         <dl className="mt-4 space-y-2 text-sm">

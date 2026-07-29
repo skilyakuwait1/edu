@@ -6,6 +6,7 @@ const ITEMS = [
   { href: "/settings/sources", label: "مصادر العملاء" },
   { href: "/settings/branches", label: "الفروع" },
   { href: "/settings/queue", label: "إعدادات الطابور" },
+  { href: "/settings/integrations", label: "تكامل واتساب (WATI)" },
 ];
 
 export function SettingsNav() {

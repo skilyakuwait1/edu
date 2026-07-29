@@ -18,6 +18,7 @@ const TYPE_ICON: Record<TimelineEventType, string> = {
   ASSIGNED_TO_EMPLOYEE: "👤",
   RELEASED_TO_QUEUE: "↩️",
   IMPORTED: "📥",
+  WATI_REMINDER_SENT: "🔔",
 };
 
 /** Renders the lead's append-only timeline, newest first — nothing here is ever edited or removed. */

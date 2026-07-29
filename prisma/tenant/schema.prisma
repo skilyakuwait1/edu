@@ -112,6 +112,7 @@ enum TimelineEventType {
   ASSIGNED_TO_EMPLOYEE
   RELEASED_TO_QUEUE
   IMPORTED
+  WATI_REMINDER_SENT
 }
 
 // ---------- Users / Employees ----------
@@ -308,7 +309,11 @@ model ActivityLog {
 // Single-row table (id is always "singleton") holding queue-engine config,
 // editable by Super Admin.
 model Settings {
-  id                     String @id @default("singleton")
-  queueSize              Int    @default(20)
-  inactivityTimeoutHours Int    @default(48)
+  id                     String  @id @default("singleton")
+  queueSize              Int     @default(20)
+  inactivityTimeoutHours Int     @default(48)
+  // WATI (WhatsApp Business API) integration — each tenant configures its own account.
+  watiApiEndpoint        String? @db.Text
+  watiApiKey             String? @db.Text
+  watiTemplateName       String? @db.Text
 }
