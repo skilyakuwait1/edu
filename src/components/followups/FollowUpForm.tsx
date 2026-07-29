@@ -82,7 +82,7 @@ export function FollowUpForm({ leadId }: { leadId: string }) {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-gray-900"
+        className="rounded-md bg-brand px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50 hover:bg-brand-hover"
       >
         {submitting ? "..." : "جدولة متابعة"}
       </button>

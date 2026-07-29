@@ -1,6 +1,7 @@
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn } from "@/lib/platformAuth";
+import { Logo } from "@/components/brand/Logo";
 
 export default async function PlatformAdminLoginPage({
   searchParams,
@@ -31,9 +32,12 @@ export default async function PlatformAdminLoginPage({
         action={handleLogin}
         className="w-full max-w-sm space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900"
       >
-        <div>
-          <h1 className="text-lg font-semibold">لوحة تحكم المنصة</h1>
-          <p className="text-sm text-gray-500">تسجيل دخول مالك المنصة</p>
+        <div className="flex items-center gap-3">
+          <Logo size={40} />
+          <div>
+            <h1 className="text-lg font-semibold">لوحة تحكم المنصة</h1>
+            <p className="text-sm text-gray-500">تسجيل دخول مالك المنصة</p>
+          </div>
         </div>
 
         {params.error && (
@@ -70,7 +74,7 @@ export default async function PlatformAdminLoginPage({
 
         <button
           type="submit"
-          className="w-full rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white dark:bg-white dark:text-gray-900"
+          className="w-full rounded-md bg-brand px-3 py-2 text-sm font-medium text-white hover:bg-brand-hover"
         >
           دخول
         </button>

@@ -187,7 +187,7 @@ export function CallResultForm({ leadId, branches }: { leadId: string; branches:
       <button
         type="submit"
         disabled={submitting || !result}
-        className="w-full rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-gray-900"
+        className="w-full rounded-md bg-brand px-4 py-2 text-sm font-medium text-white disabled:opacity-50 hover:bg-brand-hover"
       >
         {submitting ? "..." : "حفظ نتيجة المكالمة"}
       </button>

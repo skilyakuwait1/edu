@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Logo } from "@/components/brand/Logo";
 
 function LoginForm() {
   const router = useRouter();
@@ -42,9 +43,12 @@ function LoginForm() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900"
       >
-        <div>
-          <h1 className="text-lg font-semibold">Education CRM</h1>
-          <p className="text-sm text-gray-500">تسجيل الدخول - مركز الاتصال</p>
+        <div className="flex items-center gap-3">
+          <Logo size={40} />
+          <div>
+            <h1 className="text-lg font-semibold">Education CRM</h1>
+            <p className="text-sm text-gray-500">تسجيل الدخول - مركز الاتصال</p>
+          </div>
         </div>
 
         {error && (
@@ -84,7 +88,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-gray-900"
+          className="w-full rounded-md bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-50 hover:bg-brand-hover"
         >
           {loading ? "..." : "دخول"}
         </button>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/nav/SignOutButton";
+import { Logo } from "@/components/brand/Logo";
 import type { NavItem } from "@/components/nav/navItems";
 
 export function DashboardShell({
@@ -32,7 +33,10 @@ export function DashboardShell({
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Mobile top bar */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden dark:border-gray-800 dark:bg-gray-950">
-        <span className="font-semibold">Education CRM</span>
+        <span className="flex items-center gap-2 font-semibold">
+          <Logo size={26} />
+          Education CRM
+        </span>
         <button
           onClick={() => setOpen(true)}
           aria-label="فتح القائمة"
@@ -60,10 +64,13 @@ export function DashboardShell({
         }`}
       >
         <div className="mb-6 flex items-center justify-between">
-          <div>
-            <p className="font-semibold">Education CRM</p>
-            <p className="text-xs text-gray-500">{email}</p>
-            <p className="text-xs text-gray-400">{role}</p>
+          <div className="flex items-center gap-2">
+            <Logo size={32} />
+            <div>
+              <p className="font-semibold">Education CRM</p>
+              <p className="text-xs text-gray-500">{email}</p>
+              <p className="text-xs text-gray-400">{role}</p>
+            </div>
           </div>
           <button
             onClick={() => setOpen(false)}
@@ -76,15 +83,22 @@ export function DashboardShell({
           </button>
         </div>
         <nav className="flex flex-1 flex-col gap-1">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-md px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {items.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-md px-3 py-2 text-sm ${
+                  active
+                    ? "bg-brand-light font-medium text-brand dark:bg-brand/20 dark:text-brand-hover"
+                    : "hover:bg-gray-200 dark:hover:bg-gray-800"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <SignOutButton />
       </aside>

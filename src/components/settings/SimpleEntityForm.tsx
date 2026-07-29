@@ -50,7 +50,7 @@ export function SimpleEntityForm({
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-white dark:text-gray-900"
+        className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white disabled:opacity-50 hover:bg-brand-hover"
       >
         إضافة
       </button>

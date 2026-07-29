@@ -30,7 +30,7 @@ export default withTenantContext(async function ReportsPage() {
           {report.dailyCalls.map((day) => (
             <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
               <div
-                className="w-full rounded-t bg-gray-900 dark:bg-white"
+                className="w-full rounded-t bg-brand"
                 style={{ height: `${Math.max(4, day.count * 8)}px` }}
                 title={`${day.count}`}
               />

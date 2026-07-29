@@ -39,7 +39,7 @@ export default withTenantContext(async function LeadsPage({
         <h1 className="text-xl font-semibold">العملاء</h1>
         <Link
           href="/leads/new"
-          className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-gray-900"
+          className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-hover"
         >
           + عميل جديد
         </Link>

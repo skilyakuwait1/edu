@@ -39,7 +39,7 @@ export default withTenantContext(async function LeadDetailPage({
         <div className="mt-4 flex gap-2">
           <a
             href={telLink}
-            className="flex-1 rounded-md bg-gray-900 px-4 py-3 text-center text-sm font-medium text-white dark:bg-white dark:text-gray-900"
+            className="flex-1 rounded-md bg-brand px-4 py-3 text-center text-sm font-medium text-white hover:bg-brand-hover"
           >
             📞 اتصال
           </a>

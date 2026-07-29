@@ -3,11 +3,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Brand — a deep indigo. Distinct from the generic "SaaS blue," reads as
+     trustworthy/professional in both directions (RTL/LTR) and holds up on
+     dark backgrounds without needing a separate dark-mode shade. */
+  --brand: #4f46e5;
+  --brand-hover: #4338ca;
+  --brand-light: #eef2ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +25,9 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --brand: #6366f1;
+    --brand-hover: #818cf8;
+    --brand-light: #1e1b4b;
   }
 }
 
