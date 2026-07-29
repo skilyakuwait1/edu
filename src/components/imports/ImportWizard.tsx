@@ -167,6 +167,7 @@ export function ImportWizard() {
                   <th className="px-3 py-2 text-right font-medium">الهاتف</th>
                   <th className="px-3 py-2 text-right font-medium">المصدر</th>
                   <th className="px-3 py-2 text-right font-medium">الحالة</th>
+                  <th className="px-3 py-2 text-right font-medium">السبب</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -181,10 +182,12 @@ export function ImportWizard() {
                     <td className="px-3 py-1.5">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs ${CLASSIFICATION_STYLES[row.classification]}`}
-                        title={row.invalidReason}
                       >
                         {CLASSIFICATION_LABELS[row.classification]}
                       </span>
+                    </td>
+                    <td className="px-3 py-1.5 text-xs text-red-600 dark:text-red-400">
+                      {row.invalidReason ?? ""}
                     </td>
                   </tr>
                 ))}

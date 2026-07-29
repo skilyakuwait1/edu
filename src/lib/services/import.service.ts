@@ -116,7 +116,7 @@ export async function classifyRows(rawRows: RawImportRow[]): Promise<ClassifiedI
         phoneNormalized: phoneResult.normalized,
         sourceId: null,
         classification: "invalid",
-        invalidReason: "المصدر غير معروف",
+        invalidReason: row.sourceName ? `المصدر غير معروف: "${row.sourceName}"` : "المصدر مفقود",
       });
       continue;
     }
