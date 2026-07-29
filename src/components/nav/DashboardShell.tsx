@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { Logo } from "@/components/brand/Logo";
+import { GlobalSearch } from "@/components/nav/GlobalSearch";
 import type { NavItem } from "@/components/nav/navItems";
 
 export function DashboardShell({
@@ -82,6 +83,7 @@ export function DashboardShell({
             </svg>
           </button>
         </div>
+        <GlobalSearch />
         <nav className="flex flex-1 flex-col gap-1">
           {items.map((item) => {
             const active = pathname === item.href;
